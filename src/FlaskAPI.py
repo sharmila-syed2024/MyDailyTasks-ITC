@@ -12,7 +12,7 @@ app = Flask(__name__)
 def home(): 
 	if(request.method == 'GET'): 
 
-		data = "hello world"
+		data = "hello my flask API"
 		return jsonify({'data': data}) 
 
 
