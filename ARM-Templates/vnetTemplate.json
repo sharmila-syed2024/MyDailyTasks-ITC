@@ -1,60 +1,60 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-      "vnetName": {
-        "type": "string"
-      },
-      "location": {
-        "type": "string"
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vnetName": {
+      "type": "string",
+      "defaultValue": "myVnet"
+    },
+    "nicName": {
+      "type": "string",
+      "defaultValue": "myNic"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2021-05-01",
+      "name": "[parameters('vnetName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "default",
+            "properties": {
+              "addressPrefix": "10.0.0.0/24"
+            }
+          }
+        ]
       }
     },
     {
-      "resources": [
-        {
-          "type": "Microsoft.Network/virtualNetworks",
-          "apiVersion": "2021-05-01",
-          "name": "[parameters('vnetName')]",
-          "location": "[parameters('location')]",
-          "properties": {
-            "addressSpace": {
-              "addressPrefixes": [
-                "10.0.0.0/16"
-              ]
-            },
-            "subnets": [
-              {
-                "name": "default",
-                "properties": {
-                  "addressPrefix": "10.0.0.0/24"
-                }
-              }
-            ]
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2021-05-01",
+      "name": "[parameters('nicName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipConfig1",
+            "properties": {
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), 'default')]"
+              },
+              "privateIPAllocationMethod": "Dynamic"
+            }
           }
-        },
-        {
-          "type": "Microsoft.Network/networkInterfaces",
-          "apiVersion": "2021-05-01",
-          "name": "[parameters('nicName')]",
-          "location": "[parameters('location')]",
-          "properties": {
-            "ipConfigurations": [
-              {
-                "name": "ipConfig1",
-                "properties": {
-                  "subnet": {
-                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), 'default')]"
-                  },
-                  "privateIPAllocationMethod": "Dynamic"
-                }
-              }
-            ]
-          },
-          "dependsOn": [
-            "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))
-    
-        }
+        ]
       }
-    ]
-  }
-  
+    }
+  ]
+}
