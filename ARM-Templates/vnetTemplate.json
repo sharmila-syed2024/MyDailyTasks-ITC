@@ -48,7 +48,7 @@
             "name": "ipConfig1",
             "properties": {
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), 'default')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('sharmiVNet'), 'default')]"
               },
               "privateIPAllocationMethod": "Dynamic"
             }
